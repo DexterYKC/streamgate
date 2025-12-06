@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="logo.svg" type="image/png">
+
+<title>StreamGate Player</title>
+
+<style>
+    body {
+        margin: 0;
+        background: #000;
+        font-family: Arial, sans-serif;
+        color: #fff;
+        text-align: center;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 14px 20px;
+        background: rgba(0,0,0,0.65);
+        backdrop-filter: blur(6px);
+        position: sticky;
+        top: 0;
+        z-index: 10;
+    }
+
+    .title {
+        font-size: 18px;
+        font-weight: bold;
+        max-width: 70%;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        text-align: left;
+    }
+
+    .badge {
+        padding: 6px 10px;
+        border-radius: 6px;
+        font-size: 14px;
+        font-weight: bold;
+    }
+
+    .badge.free { background: #00e676; color: #000; }
+    .badge.premium { background: #ff1744; color: #fff; }
+
+    .video-wrapper {
+        margin: 30px auto 10px;
+        max-width: 800px;
+        width: 95%;
+        flex-grow: 1;
+    }
+
+    video {
+        width: 100%;
+        border-radius: 8px;
+        background: #000;
+    }
+
+    .footer {
+        text-align: center;
+        font-size: 13px;
+        padding: 20px 0;
+        color: #888;
+        margin-top: auto;
+    }
+
+    /* =============================
+   FEEDBACK BUTTONS — PREMIUM SVG VERSION
+============================= */
+.feedback-btn {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: none;
+    background: #141414;
+    color: #fff;
+    margin: 0 12px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: 
+        background 0.25s ease,
+        box-shadow 0.25s ease,
+        transform 0.15s ease;
+}
+
+.feedback-btn:hover {
+    box-shadow: 0 0 14px rgba(255,255,255,0.18);
+    transform: scale(1.08);
+}
+
+/* CLICK POP (subtle) */
+.feedback-btn.animate {
+    animation: pop 0.22s ease-out;
+}
+
+@keyframes pop {
+    0%   { transform: scale(0.75); }
+    70%  { transform: scale(1.12); }
+    100% { transform: scale(1); }
+}
+
+/* After vote (subtle glow) */
+.feedback-btn.liked {
+    background: #1dbc74;
+    box-shadow: 0 0 16px rgba(29,188,116,0.55);
+}
+
+.feedback-btn.disliked {
+    background: #e53935;
+    box-shadow: 0 0 16px rgba(229,57,53,0.55);
+}
+
+#feedbackStatus {
+    margin-top: 10px;
+    color: #ddd;
+    font-size: 14px;
+    min-height: 20px;
+}
+
+</style>
+</head>
+
+<body oncontextmenu="return false;">
+
+<div class="header">
+    <div class="title" id="videoTitle">Loading…</div>
+    <div id="videoBadge"></div>
+</div>
+
+<div class="video-wrapper">
+    <video id="player" controls autoplay playsinline controlsList="nodownload" oncontextmenu="return false;">></video>
+</div>
+
+<div id="feedback" style="margin-top:20px; text-align:center;">
+      <button id="likeBtn" class="feedback-btn">
+        <svg width="26" height="26"><use href="#icon-like"/></svg>
+    </button>
+
+    <button id="dislikeBtn" class="feedback-btn">
+        <svg width="26" height="26"><use href="#icon-dislike"/></svg>
+    </button>
+    <p id="feedbackStatus" style="margin-top:10px; color:white;"></p>
+</div>
+<!-- Hidden SVG icons -->
+<svg style="display:none;">
+    <symbol id="icon-like" viewBox="0 0 24 24" fill="white">
+        <path d="M2 21h4V9H2v12zM23 10c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32
+        c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 
+        1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-2z"/>
+    </symbol>
+
+    <symbol id="icon-dislike" viewBox="0 0 24 24" fill="white">
+        <path d="M2 3h4v12H2V3zm21 8c0 1.1-.9 2-2 2h-6.31l.95 4.57.03.32c0 
+        .41-.17.79-.44 1.06L14.17 23l-6.58-6.59C7.22 16.05 7 15.55 7 
+        15V5c0-1.1.9-2 2-2h9c.83 0 1.54.5 1.84 1.22l3.02 7.05c.09.23.14.47.14.73v2z"/>
+    </symbol>
+</svg>
+
+<div class="footer">
+    Powered by StreamGate 🔥 | Secure Video Streaming
+</div>
+
+<script>
+    // ==============================
+// Anti-clic droit / anti-devtools basique
+// ==============================
+
+document.addEventListener("keydown", function(e) {
+  // F12
+  if (e.key === "F12") {
+    e.preventDefault();
+  }
+
+  // Ctrl+Shift+I / Ctrl+Shift+J / Ctrl+Shift+C
+  if (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J" || e.key === "C")) {
+    e.preventDefault();
+  }
+
+  // Ctrl+U (view source)
+  if (e.ctrlKey && e.key === "U") {
+    e.preventDefault();
+  }
+});
+
+// Empêcher drag de la vidéo
+document.addEventListener("dragstart", (e) => e.preventDefault());
+
+// --------------------------------------------------
+// GLOBAL VARS
+// --------------------------------------------------
+let videoId = null;
+
+// --------------------------------------------------
+// ELEMENTS
+// --------------------------------------------------
+const player   = document.getElementById("player");
+const titleEl  = document.getElementById("videoTitle");
+const badgeEl  = document.getElementById("videoBadge");
+
+// --------------------------------------------------
+// EXTRACT PARAMS
+// --------------------------------------------------
+const params = new URLSearchParams(window.location.search);
+const token  = params.get("token");
+
+// ==================================================
+// FREE VIDEO MODE (token=free + cid dans l'URL)
+// ==================================================
+if (token === "free") {
+  const cid   = params.get("cid");
+  const title = params.get("title") || "Untitled";
+
+  // id de la vidéo pour Like/Dislike
+  videoId = params.get("id");
+
+  titleEl.innerText = title;
+  badgeEl.innerHTML = `<span class="badge free">FREE</span>`;
+
+  if (cid) {
+    player.src = `https://gateway.pinata.cloud/ipfs/${cid}`;
+  } else {
+    alert("Missing CID for free video");
+  }
+}
+
+// ==================================================
+// PREMIUM MODE (token = JWT signé)
+// ==================================================
+// PREMIUM MODE (token = JWT signé)
+else {
+  if (!token) {
+    alert("Missing token");
+    throw new Error("Missing token");
+  }
+
+  function decodeJwt(t) {
+    const base64 = t.split(".")[1];
+    return JSON.parse(atob(base64));
+  }
+
+  let decoded;
+  try {
+    decoded = decodeJwt(token);
+  } catch (err) {
+    alert("Invalid token");
+    throw err;
+  }
+
+  videoId = decoded.video_id;
+  const title = decoded.title || "Premium video";
+
+  titleEl.innerText  = title;
+  badgeEl.innerHTML  = `<span class="badge premium">PREMIUM</span>`;
+  player.src         = `/stream/${token}`;
+
+  // ==========================
+  // TOKEN ROTATION (15s)
+  // ==========================
+  let currentToken = token;
+  const REFRESH_INTERVAL_MS = 15000; // 15 sec
+
+  async function refreshToken() {
+    try {
+      const res = await fetch("/generate/refresh-token", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token: currentToken })
+      });
+
+      if (!res.ok) return;
+
+      const data = await res.json();
+      if (!data.success || !data.token) return;
+
+      currentToken = data.token;
+      // Optionnel : si un jour tu passes à un vrai proxy streaming chunké,
+      // tu pourras utiliser currentToken pour les prochains chunks.
+    } catch (err) {
+      console.error("Token refresh failed:", err.message);
+    }
+  }
+
+  setInterval(refreshToken, REFRESH_INTERVAL_MS);
+}
+
+
+
+
+// ===================================================
+//  LIKE / DISLIKE (FREE + PREMIUM)
+// ===================================================
+const API_BASE     = window.location.origin;
+
+const likeBtn      = document.getElementById("likeBtn");
+const dislikeBtn   = document.getElementById("dislikeBtn");
+const feedbackText = document.getElementById("feedbackStatus");
+
+function resetButtons() {
+  likeBtn.style.background    = "#fff";
+  dislikeBtn.style.background = "#fff";
+}
+
+function clearBtnStates() {
+    likeBtn.classList.remove("liked", "animate");
+    dislikeBtn.classList.remove("disliked", "animate");
+}
+
+likeBtn.onclick = async () => {
+    if (!videoId) return;
+
+    clearBtnStates();
+    likeBtn.classList.add("liked", "animate");
+
+    await fetch(`${API_BASE}/videos/like/${videoId}`, { method: "POST" });
+    feedbackText.innerText = "Thanks for the like";
+};
+
+dislikeBtn.onclick = async () => {
+    if (!videoId) return;
+
+    clearBtnStates();
+    dislikeBtn.classList.add("disliked", "animate");
+
+    await fetch(`${API_BASE}/videos/dislike/${videoId}`, { method: "POST" });
+    feedbackText.innerText = "Feedback saved.";
+};
+
+</script>
+
+
+</body>
+</html>
