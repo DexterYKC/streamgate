@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" href="logo.svg" type="image/png">
+  <title>StreamGate Admin</title>
+  <link rel="stylesheet" href="style.css" />
+
+</head>
+<body>
+
+<header class="topnav">
+  <div class="nav-left">
+    <div class="logo-badge">🎥</div>
+    <span class="nav-title">StreamGate Admin</span>
+  </div>
+
+  <nav class="nav-links">
+    <a href="index.html" class="nav-link active">Videos</a>
+    <a href="categories.html" class="nav-link">Categories</a>
+    <a href="users.html" class="nav-link">Users</a>
+    <a href="analytics.html" class="nav-link">Analytics</a>
+    <a href="bots.html" class="nav-link">Bots</a>
+    <a href="broadcast.html" class="nav-link">Broadcast</a>
+    <button class="nav-logout-btn">Logout</button>
+  </nav>
+</header>
+
+<main class="page">
+
+  <header class="page-header">
+    <h1>Upload New Video</h1>
+    <p class="subtitle">
+      Upload video + thumbnail. Metadata is saved automatically on IPFS.
+    </p>
+  </header>
+
+  <!-- UPLOAD VIDEO FORM -->
+  <section class="card">
+    <form id="uploadForm" enctype="multipart/form-data">
+
+      <input type="text" id="title" placeholder="Video title" required />
+      <textarea id="description" placeholder="Description"></textarea>
+
+      <label for="categoriesSelect">Select Category</label>
+        <select id="categoriesSelect" required>
+          <option value="">-- Choose a category --</option>
+        </select>
+
+      
+      <label for="videoType">Video Type</label>
+        <select id="videoType">
+          <option value="premium">💎 Premium</option>
+          <option value="free">🎁 Free Preview</option>
+          <option value="vip">👑 VIP Exclusive (monthly subscribers, expires in 30 days)</option>
+        </select>
+
+        <label>Upload Video File:</label>
+        <input type="file" id="video" accept="video/*" multiple required />
+
+
+
+      <label>Upload Thumbnail Image:</label>
+      <input type="file" id="image" accept="image/*" required />
+
+      <button class="primary-btn" type="submit">Upload</button>
+    </form>
+
+    <p id="uploadStatus"></p>
+  </section>
+
+  <!-- TABLE OF VIDEOS -->
+  <section class="card">
+    <div class="card-header">
+      <h2>Videos Library</h2>
+      <button class="mini-btn" onclick="loadVideos()">🔄 Refresh</button>
+    </div>
+
+    <input type="text" id="filterSearch" placeholder="Search videos…">
+
+    <select id="filterCategory">
+      <option value="">All categories</option>
+    </select>
+
+    <table id="videoTable">
+      <thead>
+        <tr>
+          <th>Thumbnail</th>
+          <th>Title</th>
+          <th>Type</th>
+          <th>Category</th>
+          <th>Feedback</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </section>
+
+</main>
+<div id="editModal">
+  <div class="modal-content">
+    <h2>Edit Video</h2>
+
+    <label>Title</label>
+    <input id="editTitle" type="text">
+
+    <label>Description</label>
+    <textarea id="editDescription"></textarea>
+
+    <label>Category</label>
+    <select id="editCategory"></select>
+
+    <label>Video Type</label>
+    <select id="editType">
+      <option value="premium">💎 Premium</option>
+      <option value="free">🎁 Free Preview</option>
+      <option value="vip">👑 VIP Exclusive (monthly subscribers, expires in 30 days)</option>
+    </select>
+
+    <label>New Thumbnail (optional)</label>
+    <input id="editImage" type="file" accept="image/*">
+
+    <label>New Video File (optional)</label>
+    <input id="editVideo" type="file" accept="video/*">
+
+    <div class="modal-buttons">
+      <button onclick="closeEditModal()" class="button-ghost">Cancel</button>
+      <button onclick="saveEdit()" class="primary-btn">Save</button>
+    </div>
+  </div>
+</div>
+<script src="admin-guard.js" defer></script>
+<script src="admin.js"></script>
+</body>
+</html>

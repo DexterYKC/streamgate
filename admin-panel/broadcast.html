@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>StreamGate – Broadcast</title>
+  <link rel="icon" href="logo.svg" type="image/png">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<header class="topnav">
+  <div class="nav-left">
+    <div class="logo-badge">🎥</div>
+    <span class="nav-title">StreamGate Admin</span>
+  </div>
+  <nav class="nav-links">
+    <a href="index.html" class="nav-link">Videos</a>
+    <a href="categories.html" class="nav-link">Categories</a>
+    <a href="users.html" class="nav-link">Users</a>
+    <a href="analytics.html" class="nav-link">Analytics</a>
+    <a href="bots.html" class="nav-link">Bots</a>
+    <a href="broadcast.html" class="nav-link active">Broadcast</a>
+    <button class="nav-logout-btn" id="logoutBtn">Logout</button>
+  </nav>
+</header>
+
+<main class="page">
+  <div class="page-header">
+    <h1>Broadcast</h1>
+    <p class="subtitle">Send a message to your users — pick a template or write your own.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <h2>📋 Templates</h2>
+    </div>
+    <div id="templateGrid" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap:12px;"></div>
+  </div>
+
+  <div class="card" style="margin-top:24px;">
+    <div class="card-header">
+      <h2>✏️ Compose</h2>
+    </div>
+
+    <label class="label">Message (HTML supported — &lt;b&gt;, &lt;i&gt;, etc.)</label>
+    <textarea id="broadcastText" rows="9" placeholder="Write your message…"></textarea>
+
+    <label class="label">Image URL (optional — sends as photo with caption)</label>
+    <input type="text" id="broadcastImage" placeholder="https://gateway.pinata.cloud/ipfs/...">
+
+    <div style="display:flex; gap:16px; flex-wrap:wrap; margin-top:14px;">
+      <div>
+        <label class="label">Button (optional)</label>
+        <select id="buttonPreset">
+          <option value="">No button</option>
+          <option value="categories">📁 Browse Categories</option>
+          <option value="sub_menu">💎 Subscribe / Renew</option>
+          <option value="open_bot">🚀 Open Bot</option>
+        </select>
+      </div>
+      <div>
+        <label class="label">Button label</label>
+        <input type="text" id="buttonLabel" placeholder="e.g. ▶ Watch Now">
+      </div>
+    </div>
+
+    <label class="label" style="margin-top:16px;">Send to</label>
+    <select id="audienceSelect">
+      <option value="all">🌍 Everyone (all bot users)</option>
+      <option value="active">✅ Active subscribers only</option>
+      <option value="inactive">💤 Inactive / expired users only</option>
+    </select>
+
+    <div style="margin-top:20px;">
+      <button class="button button-danger" onclick="sendBroadcast()">📢 Send Broadcast</button>
+    </div>
+
+    <div id="broadcastResult" style="margin-top:16px; display:none;"></div>
+  </div>
+</main>
+
+<script src="admin-guard.js" defer></script>
+<script src="broadcast.js"></script>
+</body>
+</html>

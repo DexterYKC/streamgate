@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Login</title>
+  <link rel="stylesheet" href="style.css">
+
+</head>
+<body>
+
+  <div class="box">
+    <h2>Admin Login</h2>
+
+    <input type="password" id="key" placeholder="Enter admin key" autocomplete="current-password">
+    <input type="text" id="code" placeholder="2FA code (if enabled)" inputmode="numeric" maxlength="6" autocomplete="one-time-code">
+
+    <button id="loginBtn" onclick="login()">Login</button>
+
+    <p id="info" style="color:red;"></p>
+  </div>
+
+<script>
+async function login() {
+  const key = document.getElementById("key").value.trim();
+  const code = document.getElementById("code").value.trim();
+  const info = document.getElementById("info");
+  const btn = document.getElementById("loginBtn");
+
+  info.style.color = "red";
+  info.innerText = "";
+
+  if (!key) {
+    info.innerText = "Key required!";
+    return;
+  }
+
+  btn.disabled = true;
+  try {
+    const res = await fetch("/admin-auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ key, code })
+    });
+    const data = await res.json().catch(() => ({}));
+
+    if (!res.ok || !data.success) {
+      info.innerText = data.error || "Login failed";
+      return;
+    }
+
+    // Store the short-lived session token (NOT the raw password) — sent as x-admin-key afterwards
+    localStorage.setItem("ADMIN_KEY", data.token);
+    window.location.href = "index.html";
+  } catch (err) {
+    info.innerText = "Network error — try again";
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+document.getElementById("code").addEventListener("keydown", (e) => {
+  if (e.key === "Enter") login();
+});
+document.getElementById("key").addEventListener("keydown", (e) => {
+  if (e.key === "Enter") login();
+});
+</script>
+
+</body>
+</html>

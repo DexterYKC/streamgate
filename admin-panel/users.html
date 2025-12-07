@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>StreamGate – Users</title>
+  <link rel="icon" href="logo.svg" type="image/png">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<header class="topnav">
+  <div class="nav-left">
+    <div class="logo-badge">🎥</div>
+    <span class="nav-title">StreamGate Admin</span>
+  </div>
+  <nav class="nav-links">
+    <a href="index.html" class="nav-link">Videos</a>
+    <a href="categories.html" class="nav-link">Categories</a>
+    <a href="users.html" class="nav-link active">Users</a>
+    <a href="analytics.html" class="nav-link">Analytics</a>
+    <a href="bots.html" class="nav-link">Bots</a>
+    <a href="broadcast.html" class="nav-link">Broadcast</a>
+    <button class="nav-logout-btn" id="logoutBtn">Logout</button>
+  </nav>
+</header>
+
+<main class="page">
+  <div class="page-header">
+    <h1>Users</h1>
+    <p class="subtitle">All bot users — grant premium access manually.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <h2>Subscribers</h2>
+      <button class="mini-btn" onclick="loadUsers()">🔄 Refresh</button>
+    </div>
+    <table id="usersTable">
+      <thead>
+        <tr>
+          <th>Telegram ID</th>
+          <th>UID</th>
+          <th>Plan</th>
+          <th>Expires</th>
+          <th>Status</th>
+          <th>Referrals</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="usersBody">
+        <tr><td colspan="7">Loading…</td></tr>
+      </tbody>
+    </table>
+  </div>
+</main>
+
+<!-- GRANT MODAL -->
+<div id="grantModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:60; align-items:center; justify-content:center;">
+  <div class="modal-content">
+    <h2>Grant Premium Access</h2>
+    <p id="grantUidLabel" style="font-size:12px; color:#6b7280; margin-bottom:12px;"></p>
+
+    <label class="label">Plan</label>
+    <select id="grantPlan">
+      <option value="week">Week (7 days)</option>
+      <option value="month">Month (30 days)</option>
+      <option value="custom">Custom</option>
+    </select>
+
+    <div id="customDaysWrap" style="display:none;">
+      <label class="label">Number of days</label>
+      <input type="number" id="customDays" min="1" value="7" placeholder="Days">
+    </div>
+
+    <div class="modal-buttons">
+      <button class="button button-ghost" onclick="closeGrantModal()">Cancel</button>
+      <button class="primary-btn" onclick="confirmGrant()">✅ Grant</button>
+    </div>
+  </div>
+</div>
+
+<script src="admin-guard.js" defer></script>
+<script src="users.js"></script>
+</body>
+</html>

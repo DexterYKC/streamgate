@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>StreamGate – Categories</title>
+  <link rel="icon" href="logo.svg" type="image/png">
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    /* SPÉCIFIQUE À CETTE PAGE — ne touche aucun autre écran */
+    .page-categories {
+      max-width: 1200px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 90px 20px 40px;
+    }
+
+    @media(max-width:768px) {
+      .page-categories {
+        padding: 80px 14px 30px;
+      }
+
+      /* Élargir la carte pour bien voir */
+      .page-categories .card {
+        padding: 18px;
+      }
+
+      #categoriesList .cat-item {
+        padding: 14px !important;
+        border-radius: 14px !important;
+        font-size: 16px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- NAVBAR -->
+  <div class="topnav">
+    <div class="nav-left">
+      <div class="logo-badge">A</div>
+      <span class="nav-title">StreamGate Admin</span>
+    </div>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link">Videos</a>
+      <a href="categories.html" class="nav-link active">Categories</a>
+      <a href="analytics.html" class="nav-link">Analytics</a>
+      <a href="bots.html" class="nav-link">Bots</a>
+      <a href="broadcast.html" class="nav-link">Broadcast</a>
+      <button id="logoutBtn" class="nav-logout-btn">Logout</button>
+    </div>
+  </div>
+
+  <!-- PAGE CONTENT -->
+  <div class="page page-categories">
+
+    <div class="page-header">
+      <h1>Manage Categories</h1>
+      <p class="subtitle">Create, edit and manage all content categories.</p>
+    </div>
+
+    <div class="card">
+      <button class="primary-btn" id="addCategoryBtn">+ Add Category</button>
+
+      <div id="categoriesList" style="margin-top:15px;">
+        Loading…
+      </div>
+    </div>
+
+  </div>
+
+  <!-- MODAL -->
+  <div id="editModal">
+    <div class="modal-content">
+      <h2 id="modalTitle">New Category</h2>
+
+      <label class="label">Name</label>
+      <input type="text" id="catName" placeholder="Category name">
+
+      <label class="label">Description</label>
+      <textarea id="catDesc" placeholder="Short description"></textarea>
+
+      <label class="label">Thumbnail URL</label>
+      <input type="text" id="catThumb" placeholder="IPFS or image URL">
+
+      <label class="label">Banner URL</label>
+      <input type="text" id="catBanner" placeholder="IPFS or image URL">
+
+      <label class="label">Position</label>
+      <input type="number" id="catPosition" min="1" value="1">
+
+      <div class="modal-buttons">
+        <button id="deleteBtn" class="danger-btn" style="display:none;">Delete</button>
+        <button id="saveBtn" class="primary-btn">Save</button>
+      </div>
+    </div>
+  </div>
+<script>
+function logout() {
+  localStorage.removeItem("ADMIN_KEY");
+  window.location.href = "login.html";
+}
+</script>
+  <script src="admin-guard.js" defer></script>
+  <script src="categories.js"></script>
+</body>
+</html>

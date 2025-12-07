@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>StreamGate – Bots</title>
+  <link rel="icon" href="logo.svg" type="image/png">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<header class="topnav">
+  <div class="nav-left">
+    <div class="logo-badge">🎥</div>
+    <span class="nav-title">StreamGate Admin</span>
+  </div>
+  <nav class="nav-links">
+    <a href="index.html" class="nav-link">Videos</a>
+    <a href="categories.html" class="nav-link">Categories</a>
+    <a href="users.html" class="nav-link">Users</a>
+    <a href="analytics.html" class="nav-link">Analytics</a>
+    <a href="bots.html" class="nav-link active">Bots</a>
+    <a href="broadcast.html" class="nav-link">Broadcast</a>
+    <button class="nav-logout-btn" id="logoutBtn">Logout</button>
+  </nav>
+</header>
+
+<main class="page">
+  <div class="page-header">
+    <h1>Bot Management</h1>
+    <p class="subtitle">All configured Telegram bots. Add backup bots by setting <code>TELEGRAM_TOKEN_2</code> + <code>BOT_USERNAME_2</code> in Render env vars.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <h2>Active Bots</h2>
+      <button class="mini-btn" onclick="loadBots()">🔄 Refresh</button>
+    </div>
+    <table id="botsTable">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Username</th>
+          <th>Webhook</th>
+          <th>Role</th>
+        </tr>
+      </thead>
+      <tbody id="botsBody">
+        <tr><td colspan="4">Loading…</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card" style="margin-top:24px;">
+    <div class="card-header">
+      <h2>🚨 Emergency Migration</h2>
+    </div>
+    <p style="color:#9ca3af; margin-bottom:16px;">
+      If a bot gets banned, send a migration broadcast to all <b>active subscribers</b> from the current bot pointing them to the backup bot.
+    </p>
+
+    <div style="display:flex; gap:16px; flex-wrap:wrap; align-items:flex-end;">
+      <div>
+        <label class="label">Send from (banned bot)</label>
+        <select id="fromBotSelect"></select>
+      </div>
+      <div>
+        <label class="label">Redirect to (backup bot)</label>
+        <select id="toBotSelect"></select>
+      </div>
+      <button class="button button-danger" onclick="triggerMigration()">📢 Send Migration Broadcast</button>
+    </div>
+
+    <div id="migrationResult" style="margin-top:16px; display:none;"></div>
+  </div>
+
+  <div class="card" style="margin-top:24px; background:#1a1a2e; border:1px solid #2d2d4a;">
+    <h2 style="margin-bottom:12px;">📋 How to add a backup bot</h2>
+    <ol style="color:#9ca3af; line-height:2; padding-left:20px;">
+      <li>Create a new bot on <a href="https://t.me/BotFather" target="_blank" style="color:#6366f1;">@BotFather</a> → <code>/newbot</code></li>
+      <li>Copy the token and username</li>
+      <li>In <b>Render → Environment</b>, add:<br>
+        <code>TELEGRAM_TOKEN_2</code> = <i>your new token</i><br>
+        <code>BOT_USERNAME_2</code> = <i>YourBackupBotUsername</i>
+      </li>
+      <li>Redeploy — the webhook registers automatically</li>
+      <li>If the primary bot gets banned, come here and send the migration broadcast</li>
+    </ol>
+  </div>
+</main>
+
+<script src="admin-guard.js" defer></script>
+<script src="bots.js"></script>
+</body>
+</html>
