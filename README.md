@@ -47,3 +47,7 @@ npm start
 ## Status
 
 Used in production, then set aside. Not packaged for third parties: expect to adapt copy, prices and hosting to your own project.
+
+## License
+
+[MIT](LICENSE): you are free to use, adapt and build on this code. Credit is appreciated.
